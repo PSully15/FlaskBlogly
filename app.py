@@ -126,9 +126,9 @@ def posts_new(user_id):
     return redirect(f"/users/{user_id}")
 
 
-@app.route('/posts/<int:user_id>')
+@app.route('/posts/<int:post_id>')
 def posts_show(post_id):
-    """Show page wirh info for user post"""
+    """Show page with info for user post"""
 
     post = Post.query.get_or_404(post_id)
     return render_template('posts/show.html', post=post)
@@ -157,7 +157,7 @@ def posts_update(post_id):
     return redirect(f"/users/{post.user_id}")
 
 
-@app.route('/posts/<int:user_id>/delete', methods=["POST"])
+@app.route('/posts/<int:post_id>/delete', methods=["POST"])
 def posts_destroy(post_id):
     """Delete an existing post"""
 
