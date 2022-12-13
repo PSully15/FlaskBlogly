@@ -18,12 +18,29 @@ class User(db.Model):
     """Site Users table model."""
 
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.Text, nullable=False)
-    last_name = db.Column(db.Text, nullable=False)
-    image_url = db.Column(db.Text, nullable=False, default=DEFAULT_IMAGE_URL)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+    first_name = db.Column(
+        db.Text,
+        nullable=False
+    )
+    last_name = db.Column(
+        db.Text,
+        nullable=False
+    )
+    image_url = db.Column(
+        db.Text,
+        nullable=False,
+        default=DEFAULT_IMAGE_URL
+    )
 
-    posts = db.relationship("Post", backref="user", cascade="all, delete-orphan")
+    posts = db.relationship(
+        "Post",
+        backref="user",
+        cascade="all, delete-orphan"
+    )
 
     @property
     def full_name(self):
@@ -66,6 +83,47 @@ class Post(db.Model):
 
     @property
     def friendly_date(self):
-        """Returns formatted date"""
+        """Returns formatted date."""
 
         return self.created_at.strftime("%a %b %-d %Y, %-I:%M %p")
+
+
+class PostTag(db.Model):
+    """Tag on a post."""
+
+    __tablename__ = "posts_tags"
+
+    post_id = db.Column(
+        db.Integer,
+        db.ForeignKey('posts.id'),
+        primary_key=True
+    )
+
+    tag_id = db.Column(
+        db.Integer,
+        db.ForeignKey('tags.id'),
+        primary_key=True
+    )
+
+
+class Tag(db.Model):
+    """Tag to be added to a post."""
+
+    __tablename__ = "tags"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+    name = db.Column(
+        db.Text,
+        nullable=False,
+        unique=True
+    )
+
+    posts = db.relationship(
+        'Post',
+        secondary="posts_tags",
+        cascade="all, delete",
+        backref="tags"
+    )
